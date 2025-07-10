@@ -2,84 +2,114 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Smooth — Telegram Mini App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <title>Умный календарь ухода за лицом</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    /* Fallback стили на случай, если основной CSS не загрузится */
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #eafffa;
+      color: #222;
+    }
+    .logo-smooth {
+      font-family: 'Pacifico', cursive, 'Segoe UI', Arial, sans-serif;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
-    <header class="header">
-      <h1>🧴 Уход за лицом</h1>
-      <p class="subtitle">Ваш персональный календарь красоты</p>
-    </header>
-
-    <div class="main-content">
-      <!-- Экраны Telegram Mini App -->
-      <div id="screen-welcome" class="app-screen">
-        <div class="logo">Smooth</div>
-        <div class="subtitle">Ваш персональный помощник по уходу за кожей лица</div>
-        <div class="desc">Начните свой путь в уходе за кожей</div>
-        <button id="btn-register" class="btn-primary">Зарегистрироваться</button>
-        <button id="btn-login" class="btn-secondary">Уже есть аккаунт</button>
+    <div id="screen-welcome" class="app-screen welcome-screen">
+      <div class="logo logo-smooth">Smooth</div>
+      <div class="welcome-title">Ваш персональный помощник по уходу за кожей лица</div>
+      <div class="welcome-desc">Начните свой путь в уходе за кожей</div>
+      <button id="btn-register" class="btn-gradient">Зарегистрироваться</button>
+      <button id="btn-login" class="btn-white">Уже есть аккаунт</button>
+      <div class="welcome-agreement">
+        Продолжая, вы соглашаетесь с <a href="#" target="_blank">политикой конфиденциальности</a>
       </div>
-
-      <div id="screen-register" class="app-screen" style="display:none;">
-        <div class="logo">Smooth</div>
-        <div class="subtitle">Введите данные для регистрации:</div>
+    </div>
+    <div id="screen-register" class="app-screen register-screen" style="display:none;">
+      <div class="logo logo-smooth">Smooth</div>
+      <div class="register-title">Ваш персональный помощник по уходу за кожей лица</div>
+      <div class="register-subtitle">
+        <span class="register-icon">&#x27A4;</span> Введите данные для регистрации:
+      </div>
         <input type="text" id="reg-name" placeholder="Имя" class="input-field">
         <input type="email" id="reg-email" placeholder="Почта" class="input-field">
         <input type="password" id="reg-password" placeholder="Придумайте пароль" class="input-field">
-        <button id="btn-do-register" class="btn-primary">Зарегистрироваться</button>
+      <button id="btn-do-register" class="btn-gradient">Зарегистрироваться</button>
+    </div>
+    <div id="screen-selfie" class="app-screen selfie-screen" style="display:none;">
+      <div class="selfie-title">
+        <span class="selfie-icon">&#x27A4;</span> Сделай селфи
       </div>
-
-      <div id="screen-login" class="app-screen" style="display:none;">
-        <div class="logo">Smooth</div>
-        <div class="subtitle">Введите данные для входа:</div>
-        <input type="email" id="login-email" placeholder="Почта" class="input-field">
-        <input type="password" id="login-password" placeholder="Пароль" class="input-field">
-        <button id="btn-do-login" class="btn-primary">Войти</button>
+      <div class="selfie-preview" id="selfiePreview">
+        <video id="selfieVideo" autoplay playsinline style="width:100%;max-width:260px;display:none;"></video>
+        <canvas id="selfieCanvas" style="display:none;"></canvas>
+        <div id="selfiePlaceholder" style="width:100%;height:220px;background:#eee;border-radius:12px;border:1.5px solid #bbb;display:flex;align-items:center;justify-content:center;color:#bbb;font-size:1.2em;">Фото</div>
       </div>
-
-      <div id="screen-selfie" class="app-screen" style="display:none;">
-        <div class="subtitle">Сделай селфи</div>
-        <video id="selfie-video" autoplay playsinline style="width:90%;max-width:300px;"></video>
-        <canvas id="selfie-canvas" style="display:none;"></canvas>
         <div class="selfie-tips">
           <div>✔ Четко и прямо</div>
           <div>✔ Без макияжа и фильтров</div>
           <div>✔ При хорошем освещении</div>
         </div>
-        <button id="btn-take-selfie" class="btn-primary">Сделать фото</button>
-        <button id="btn-skip-selfie" class="btn-secondary">Пропустить</button>
+      <button id="btn-take-selfie" class="btn-gradient">Сделать фото</button>
+      <div style="text-align:center;margin-top:8px;color:#888;font-size:0.95em;">или загрузить фото</div>
+      <input type="file" id="selfieFile" accept="image/*" style="display:block;margin:0 auto 12px auto;">
+    </div>
+    <div id="screen-gender" class="app-screen gender-screen" style="display:none;">
+      <div class="logo logo-smooth">Smooth</div>
+      <div class="progress-bar" style="height:4px;width:90%;background:#e0e0e0;margin:0 auto 18px auto;position:relative;">
+        <div style="width:20%;height:100%;background:linear-gradient(90deg,#7f7fd5 0%,#86a8e7 50%,#4ecdc4 100%);"></div>
       </div>
-
-      <div id="screen-gender" class="app-screen" style="display:none;">
-        <div class="subtitle">Укажи свой пол</div>
-        <button class="btn-primary gender-btn" data-gender="Мужской">Мужской</button>
-        <button class="btn-primary gender-btn" data-gender="Женский">Женский</button>
+      <div class="gender-title">Укажи свой пол</div>
+      <div class="gender-desc">Давайте начнём вашу персональную бьюти-историю со знакомства!</div>
+      <button class="btn-white gender-btn" data-gender="Мужской">Мужской</button>
+      <button class="btn-white gender-btn" data-gender="Женский">Женский</button>
+      <button id="btn-gender-next" class="btn-gradient" disabled style="margin-top:24px;">Продолжить</button>
+    </div>
+    <div id="screen-age" class="app-screen age-screen" style="display:none;">
+      <div class="logo logo-smooth">Smooth</div>
+      <div class="progress-bar" style="height:4px;width:90%;background:#e0e0e0;margin:0 auto 18px auto;position:relative;">
+        <div style="width:40%;height:100%;background:linear-gradient(90deg,#7f7fd5 0%,#86a8e7 50%,#4ecdc4 100%);"></div>
       </div>
-
-      <div id="screen-age" class="app-screen" style="display:none;">
-        <div class="subtitle">Укажи свой возраст</div>
-        <button class="btn-primary age-btn" data-age="До 18">До 18</button>
-        <button class="btn-primary age-btn" data-age="18-25">18-25</button>
-        <button class="btn-primary age-btn" data-age="26-35">26-35</button>
-        <button class="btn-primary age-btn" data-age="36-45">36-45</button>
-        <button class="btn-primary age-btn" data-age="46+">46+</button>
+      <div class="age-title">Укажи свой возраст</div>
+      <div class="age-desc">Кожа в разном возрасте нуждается в различном уходе</div>
+      <button class="btn-white age-btn" data-age="До 18">До 18</button>
+      <button class="btn-white age-btn" data-age="18-25">18–25</button>
+      <button class="btn-white age-btn" data-age="26-35">26–35</button>
+      <button class="btn-white age-btn" data-age="36-45">36–45</button>
+      <button class="btn-white age-btn" data-age="46+">46+</button>
+      <button id="btn-age-next" class="btn-gradient" disabled style="margin-top:24px;">Продолжить</button>
+    </div>
+    <div id="screen-skin" class="app-screen skin-screen" style="display:none;">
+      <div class="logo logo-smooth">Smooth</div>
+      <div class="progress-bar" style="height:4px;width:90%;background:#e0e0e0;margin:0 auto 18px auto;position:relative;">
+        <div style="width:60%;height:100%;background:linear-gradient(90deg,#7f7fd5 0%,#86a8e7 50%,#4ecdc4 100%);"></div>
       </div>
-
-      <div id="screen-skin" class="app-screen" style="display:none;">
-        <div class="subtitle">Какой у тебя тип кожи?</div>
-        <button class="btn-primary skin-btn" data-skin="Сухая">Сухая</button>
-        <button class="btn-primary skin-btn" data-skin="Жирная">Жирная</button>
-        <button class="btn-primary skin-btn" data-skin="Комбинированная">Комбинированная</button>
-        <button class="btn-primary skin-btn" data-skin="Нормальная">Нормальная</button>
-        <button class="btn-primary skin-btn" data-skin="Чувствительная">Чувствительная</button>
+      <div class="skin-title">Какой у тебя тип кожи?</div>
+      <div class="skin-desc">Поможет определить базовые потребности в уходе</div>
+      <button class="btn-white skin-btn" data-skin="Сухая">Сухая</button>
+      <button class="btn-white skin-btn" data-skin="Жирная">Жирная</button>
+      <button class="btn-white skin-btn" data-skin="Комбинированная">Комбинированная</button>
+      <button class="btn-white skin-btn" data-skin="Нормальная">Нормальная</button>
+      <button class="btn-white skin-btn" data-skin="Чувствительная">Чувствительная</button>
+      <div class="skin-tip">Если не знаешь свой тип кожи, переходи в наш <a href="#" style="color:#4ecdc4;text-decoration:underline;">тест-навигатор</a> и мы поможем тебе определить.</div>
+      <button id="btn-skin-next" class="btn-gradient" disabled style="margin-top:24px;">Продолжить</button>
+    </div>
+    <div id="screen-problems" class="app-screen problems-screen" style="display:none;">
+      <div class="logo logo-smooth">Smooth</div>
+      <div class="progress-bar" style="height:4px;width:90%;background:#e0e0e0;margin:0 auto 18px auto;position:relative;">
+        <div style="width:80%;height:100%;background:linear-gradient(90deg,#7f7fd5 0%,#86a8e7 50%,#4ecdc4 100%);"></div>
       </div>
-
-      <div id="screen-problems" class="app-screen" style="display:none;">
-        <div class="subtitle">Какие проблемы кожи тебя беспокоят?</div>
+      <div class="problems-title">Какие проблемы кожи тебя беспокоят?</div>
+      <div class="problems-desc">Можете выбрать несколько</div>
         <div class="problems-list">
           <button class="btn-secondary problem-btn" data-problem="Акне">Акне</button>
           <button class="btn-secondary problem-btn" data-problem="Сухость">Сухость</button>
@@ -92,11 +122,15 @@
           <button class="btn-secondary problem-btn" data-problem="Признаки старения">Признаки старения</button>
           <button class="btn-secondary problem-btn" data-problem="Чувствительность">Чувствительность</button>
         </div>
-        <button id="btn-problems-next" class="btn-primary">Продолжить</button>
+      <button id="btn-problems-next" class="btn-gradient" disabled style="margin-top:24px;">Продолжить</button>
+    </div>
+    <div id="screen-goals" class="app-screen goals-screen" style="display:none;">
+      <div class="logo logo-smooth">Smooth</div>
+      <div class="progress-bar" style="height:4px;width:90%;background:#e0e0e0;margin:0 auto 18px auto;position:relative;">
+        <div style="width:100%;height:100%;background:linear-gradient(90deg,#7f7fd5 0%,#86a8e7 50%,#4ecdc4 100%);"></div>
       </div>
-
-      <div id="screen-goals" class="app-screen" style="display:none;">
-        <div class="subtitle">Какие у тебя цели в уходе?</div>
+      <div class="goals-title">Какие у тебя цели в уходе?</div>
+      <div class="goals-desc">Можешь выбрать несколько</div>
         <div class="goals-list">
           <button class="btn-secondary goal-btn" data-goal="Увлажнение">Увлажнение</button>
           <button class="btn-secondary goal-btn" data-goal="Борьба с акне">Борьба с акне</button>
@@ -106,152 +140,45 @@
           <button class="btn-secondary goal-btn" data-goal="Матирование">Матирование</button>
           <button class="btn-secondary goal-btn" data-goal="Общее улучшение кожи">Общее улучшение кожи</button>
         </div>
-        <button id="btn-goals-next" class="btn-primary">Продолжить</button>
+      <button id="btn-goals-next" class="btn-gradient" disabled style="margin-top:24px;">Продолжить</button>
       </div>
-
-      <div id="screen-steps" class="app-screen" style="display:none;">
-        <div class="subtitle">Сколько ступеней ухода предпочитаешь?</div>
-        <button class="btn-primary steps-btn" data-steps="3">Минимальный (3 шага)</button>
-        <button class="btn-primary steps-btn" data-steps="5">Стандартный (5 шагов)</button>
-        <button class="btn-primary steps-btn" data-steps="7">Расширенный (7+ шагов)</button>
+    <div id="screen-steps" class="app-screen steps-screen" style="display:none;">
+      <div class="logo logo-smooth">Smooth</div>
+      <div class="progress-bar" style="height:4px;width:90%;background:#e0e0e0;margin:0 auto 18px auto;position:relative;">
+        <div style="width:100%;height:100%;background:linear-gradient(90deg,#7f7fd5 0%,#86a8e7 50%,#4ecdc4 100%);"></div>
       </div>
-
-      <div id="screen-country" class="app-screen" style="display:none;">
-        <div class="subtitle">Какие страны-производители косметики предпочитаешь?</div>
-        <button class="btn-primary country-btn" data-country="Нет предпочтений">Нет предпочтений</button>
-        <button class="btn-primary country-btn" data-country="Корейская">Корейская</button>
-        <button class="btn-primary country-btn" data-country="Европейская">Европейская</button>
-        <button class="btn-primary country-btn" data-country="Российская">Российская</button>
+      <div class="steps-title">Сколько ступеней ухода предпочитаешь?</div>
+      <div class="steps-desc">От минимализма до многослойного ритуала</div>
+      <button class="btn-white steps-btn" data-steps="3">Минимальный (3 шага: очищение, уход, защита)</button>
+      <button class="btn-white steps-btn" data-steps="5">Стандартный (5 шагов)</button>
+      <button class="btn-white steps-btn" data-steps="7">Расширенный (7+ шагов)</button>
+      <button id="btn-steps-next" class="btn-gradient" disabled style="margin-top:24px;">Продолжить</button>
       </div>
-
-      <div id="screen-budget" class="app-screen" style="display:none;">
-        <div class="subtitle">Какой бюджет на уход?</div>
-        <button class="btn-primary budget-btn" data-budget="До 1000 ₽">До 1000 ₽</button>
-        <button class="btn-primary budget-btn" data-budget="1000-3000 ₽">1000-3000 ₽</button>
-        <button class="btn-primary budget-btn" data-budget="Выше 3000 ₽">Выше 3000 ₽</button>
+    <div id="screen-country" class="app-screen country-screen" style="display:none;">
+      <div class="logo logo-smooth">Smooth</div>
+      <div class="progress-bar" style="height:4px;width:90%;background:#e0e0e0;margin:0 auto 18px auto;position:relative;">
+        <div style="width:100%;height:100%;background:linear-gradient(90deg,#7f7fd5 0%,#86a8e7 50%,#4ecdc4 100%);"></div>
       </div>
-
-      <div id="screen-loading" class="app-screen" style="display:none;">
-        <div class="subtitle">Подбираем уход...</div>
-        <div class="loader"></div>
+      <div class="country-title">Какие страны-производители косметики предпочитаешь?</div>
+      <button class="btn-white country-btn" data-country="Нет предпочтений">Нет предпочтений</button>
+      <button class="btn-white country-btn" data-country="Корейская">Корейская</button>
+      <button class="btn-white country-btn" data-country="Европейская">Европейская</button>
+      <button class="btn-white country-btn" data-country="Российская">Российская</button>
+      <button id="btn-country-next" class="btn-gradient" disabled style="margin-top:24px;">Продолжить</button>
+    </div>
+    <div id="screen-budget" class="app-screen budget-screen" style="display:none;">
+      <div class="logo logo-smooth">Smooth</div>
+      <div class="progress-bar" style="height:4px;width:90%;background:#e0e0e0;margin:0 auto 18px auto;position:relative;">
+        <div style="width:100%;height:100%;background:linear-gradient(90deg,#7f7fd5 0%,#86a8e7 50%,#4ecdc4 100%);"></div>
       </div>
-
-      <!-- Текущий день -->
-      <div class="today-section">
-        <h2>Сегодня</h2>
-        <div class="today-date" id="todayDate"></div>
-        <div class="today-tasks" id="todayTasks">
-          <!-- Задачи будут добавлены динамически -->
-        </div>
-      </div>
-
-      <!-- Календарь -->
-      <div class="calendar-section">
-        <div class="calendar-header">
-          <button class="nav-btn" id="prevMonth">‹</button>
-          <h3 id="currentMonth">Декабрь 2024</h3>
-          <button class="nav-btn" id="nextMonth">›</button>
-        </div>
-        <div class="calendar-grid" id="calendarGrid">
-          <!-- Календарь будет создан динамически -->
-        </div>
-      </div>
-
-      <!-- Добавление новой процедуры -->
-      <div class="add-procedure-section">
-        <h3>Добавить процедуру</h3>
-        <div class="form-group">
-          <input type="text" id="procedureName" placeholder="Название процедуры" class="input-field">
-        </div>
-        <div class="form-group">
-          <select id="procedureType" class="input-field">
-            <option value="">Выберите тип процедуры</option>
-            <option value="cleansing">Очищение</option>
-            <option value="toning">Тонизирование</option>
-            <option value="moisturizing">Увлажнение</option>
-            <option value="exfoliation">Пилинг</option>
-            <option value="mask">Маска</option>
-            <option value="serum">Сыворотка</option>
-            <option value="sunscreen">Солнцезащита</option>
-            <option value="night">Ночной уход</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <select id="frequency" class="input-field">
-            <option value="">Частота</option>
-            <option value="daily">Ежедневно</option>
-            <option value="twice_daily">2 раза в день</option>
-            <option value="weekly">Раз в неделю</option>
-            <option value="biweekly">Раз в 2 недели</option>
-            <option value="monthly">Раз в месяц</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <input type="time" id="procedureTime" class="input-field">
-        </div>
-        <button class="btn-primary" id="addProcedure">Добавить</button>
-      </div>
-
-      <!-- Статистика -->
-      <div class="stats-section">
-        <h3>Статистика</h3>
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-number" id="completedToday">0</div>
-            <div class="stat-label">Выполнено сегодня</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-number" id="streakDays">0</div>
-            <div class="stat-label">Дней подряд</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-number" id="totalProcedures">0</div>
-            <div class="stat-label">Всего процедур</div>
-          </div>
-        </div>
-      </div>
+      <div class="budget-title">Какой бюджет на уход?</div>
+      <div class="budget-desc">Подберём варианты под твои предпочтения</div>
+      <button class="btn-white budget-btn" data-budget="До 1000 ₽">До 1000 ₽</button>
+      <button class="btn-white budget-btn" data-budget="1000-3000 ₽">1000–3000 ₽</button>
+      <button class="btn-white budget-btn" data-budget="Выше 3000 ₽">Выше 3000 ₽</button>
+      <button id="btn-budget-next" class="btn-gradient" disabled style="margin-top:24px;">К подбору</button>
     </div>
   </div>
-
-  <!-- Модальное окно для редактирования -->
-  <div class="modal" id="editModal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <h3>Редактировать процедуру</h3>
-      <div class="form-group">
-        <input type="text" id="editProcedureName" class="input-field">
-      </div>
-      <div class="form-group">
-        <select id="editProcedureType" class="input-field">
-          <option value="cleansing">Очищение</option>
-          <option value="toning">Тонизирование</option>
-          <option value="moisturizing">Увлажнение</option>
-          <option value="exfoliation">Пилинг</option>
-          <option value="mask">Маска</option>
-          <option value="serum">Сыворотка</option>
-          <option value="sunscreen">Солнцезащита</option>
-          <option value="night">Ночной уход</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <select id="editFrequency" class="input-field">
-          <option value="daily">Ежедневно</option>
-          <option value="twice_daily">2 раза в день</option>
-          <option value="weekly">Раз в неделю</option>
-          <option value="biweekly">Раз в 2 недели</option>
-          <option value="monthly">Раз в месяц</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <input type="time" id="editProcedureTime" class="input-field">
-      </div>
-      <div class="modal-buttons">
-        <button class="btn-secondary" id="deleteProcedure">Удалить</button>
-        <button class="btn-primary" id="saveProcedure">Сохранить</button>
-      </div>
-    </div>
-  </div>
-
   <script src="main.js"></script>
 </body>
 </html>
